@@ -1,0 +1,21 @@
+---
+title: "World Happiness Project Plan"
+author: "Tejaswi Rachapudi, Ankit Datta, Isaiah Heath"
+date: "12/9/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Why World Happiness 
+
+We will be exploring the state of happiness around the world and how different factors including GDP, freedom, life expectancy, family, corruption, and generosity affect people's happiness. The World Happiness dataset (from https://www.kaggle.com/unsdsn/world-happiness#2016.csv) contains data drawn from the Gallup World Poll, where respondents were asked to rank their life on a scale from 0 (worst possible life) to 10 (best possible life). The data gives each independent variable a value based on how much that variable contributes to the happiness score. We want to explore how happiness scores differ across regions, as well as how each factor affects the score for each country. 
+
+## What we want to do with the data
+
+We would like to create visualizations to display average happiness scores across regions, how each factor (GDP, freedom, life expectancy, family, corruption, and generosity) contributes to score, and trends for how each factor affects the overall happiness score.
+The plots will show relationships between factors as well as trends within regions of the world.
+
+We also want to create models to see which factors have a statstically significant impact on score, to see how happiness score can be predicted from GDP, freedom, life expectancy, family, corruption, and generosity. 

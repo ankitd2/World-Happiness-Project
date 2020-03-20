@@ -1,0 +1,79 @@
+---
+title: "Happiness Project"
+author: "Tejaswi Rachapudi, Ankit Datta, Isaiah Heath"
+date: "12/12/2019"
+output:
+  slidy_presentation: default
+  ioslides_presentation:
+    widescreen: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+```{r include=FALSE}
+library(data.table)
+library(dplyr)
+library(ggplot2)
+library(gridExtra)
+```
+
+## World Happiness Report {.smaller}
+
+Data: 
+
+* 157 Countries from 10 Regions across the World
+* Happiness Score: A metric measured in 2016 by asking the sampled people the question: "How would you rate your happiness on a scale of 0 to 10 where 10 is the happiest?"
+* Economy (GDP per Capita)
+* Family
+* Life Expectancy
+* Freedom
+* Corruption (Government Corruption)
+* Generosity
+
+<img src="happy.jpg"; style="max-width:360px;float:right;">
+
+## World Happiness Data
+
+```{r include=FALSE}
+X2016 <- read.csv("world-happiness-2/2016.csv")
+data = as.data.table(X2016)
+names = c("Country", "Region", "HappinessRank", "Score", "LowerCI", "UpperCI", "GDP", "Family", "LifeExp", "Freedom", "Corruption", "Generosity", "DystopianResidual")
+names(data) = names
+datasubset = data[, c(4, 7,8,9,10,11,12)]
+```
+
+
+```{r warning=FALSE}
+ovr = data %>% group_by(Region) %>% summarise(Score = mean(Score))
+
+ggplot(data, aes(x = Region, y = Score, color = Region)) + geom_point() + geom_point(data = ovr, size = 4, alpha = .8) + geom_text(data = ovr, aes(label = round(Score, 2)), hjust = 0, nudge_x = .1, vjust = 0, nudge_y = 0.1) + theme(axis.title.x=element_blank(), axis.text.x=element_blank(), axis.ticks.x=element_blank()) + labs(title = "Happiness Scores by Region")
+```
+
+## Trends Between Score and Factor
+#### We plotted the linear relationship between GDP and the Score of happiness and also found that Generosity does not help predict the happiness score well in the trend (relatively flat line). In the forward selection step AIC process, Generosity is also eliminated from the final model. 
+```{r}
+gdpPlot = ggplot(data, aes(x = GDP, y = Score)) + geom_point(aes(color = Region)) + geom_smooth(method = "loess") + labs(title = "GDP vs Score")
+genPlot = ggplot(data, aes(x = Generosity, y = Score)) + geom_point(aes(color = Region)) + geom_smooth(method = "loess") + labs(title = "Generosity vs Score")
+grid.arrange(gdpPlot, genPlot)
+```
+
+
+## Regression Model {.smaller}
+#### After gathering results from our forward selection process, the model with the minimized AIC excluded Generosity. So these 5 predictors are the most significant in predicting the world happiness score. 
+
+```{r}
+score_lm = lm(Score ~ GDP + Freedom + Family + LifeExp + Corruption, data = data)
+summary(score_lm)
+```
+
+## Model Fit
+#### The residuals plot shows that points are equally spread and fall on a flat line, so the constant variance assumption appears to be satisfied. The points on the Normal Q-Q plot generally fall on the line, except for at the extremes. This means the normality assumption also holds. There are no outliers or influential points, as shown in the plots and the Bonferroni adjusted critical value. 
+```{r}
+par(mfrow = c(2,2))
+plot(score_lm)
+```
+
+
+
