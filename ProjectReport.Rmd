@@ -17,7 +17,7 @@ library(ggplot2)
 
 ## Data Cleaning and Validation
 ```{r}
-X2016 <- read.csv("world-happiness-2/2016.csv")
+X2016 <- read.csv("2016.csv")
 data = as.data.table(X2016)
 names = c("Country", "Region", "HappinessRank", "Score", "LowerCI", "UpperCI", "GDP", "Family", "LifeExp", "Freedom", "Corruption", "Generosity", "DystopianResidual")
 names(data) = names
